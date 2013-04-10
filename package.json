@@ -1,0 +1,11 @@
+{
+  "name": "robot_server.node",
+  "version": "0.1.0",
+  "description": "Robot Server",
+  "main": "robot_server.js",
+  "author":"Dominik Egger",
+  "devDependencies": {
+    "zmq": "2.2.x"
+  },
+  "contributors": []
+}
