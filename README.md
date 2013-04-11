@@ -4,7 +4,7 @@ This node provides a Server using ZMQ sockets for command, video and event messa
 
 For video messages, a second outgoing socket is available which publishes video frames encoded as base64.
 
-The format of the command, video and event messages is described in the protocol document [here]().
+The format of the command, video and event messages is described in the protocol document [here](https://raw.github.com/eggerdo/RoboTalk-Lib/master/docs/DoBotsZMQMessageProtocoll.pdf).
 
 ## Run
 
