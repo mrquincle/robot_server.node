@@ -9,7 +9,7 @@
   "main": "robot_server.js",
   "author":"Dominik Egger",
   "devDependencies": {
-    "zmq": "2.2.x"
+    "zmq": "2.4.x"
   },
   "contributors": []
 }

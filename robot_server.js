@@ -1,6 +1,6 @@
 var zmq = require('zmq')
 
-var videoSubscriber = zmq.socket('pull')
+var videoSubscriber = zmq.socket('sub')
 , videoPublisher = zmq.socket('pub')
 var videoPending = 0
 
@@ -56,18 +56,19 @@ getTime = function() {
 }
 
 // Video Handling -------------------------------------------------
-videoSubscriber.on('message', function(target, header, data) {
+videoSubscriber.subscribe('');
+videoSubscriber.on('message', function(target, rotation, data) {
 	try {
 		videoPending++
 
-		// console.log('Video received ', videoPending)
+		console.log('Video received ', videoPending)
 		// forward (publish) the received video frame to the subscribed clients
-		videoPublisher.send([target, header, data]);
+		videoPublisher.send([target, rotation, data]);
 
 		// serverProcessed();
 
 		// encode the video frame as base64 and publish it
-		videoBase64Publisher.send([target, header, data.toString('base64')]);
+		videoBase64Publisher.send([target, rotation, data.toString('base64')]);
 	} catch(err) {
 		console.log('videoSubscriber', err)
 	}
@@ -81,25 +82,25 @@ videoSubscriber.bind('tcp://*:{0}'.format(Number(videoPort)), function(err) {
 		console.log('Video Listening on {0}'.format(Number(videoPort)))
 })
 
-videoPublisher.bind('tcp://*:{0}'.format(Number(videoPort+1)), function(err) {
+videoPublisher.bind('tcp://*:{0}'.format(Number(videoPort)+1), function(err) {
 	if (err)
 		console.log(err)
 	else
-		console.log('Video Sending on {0}'.format(Number(videoPort+1)))
+		console.log('Video Sending on {0}'.format(Number(videoPort)+1))
 })
 
-videoBase64Publisher.bind('tcp://*:{0}'.format(Number(videoPort+2)), function(err) {
+videoBase64Publisher.bind('tcp://*:{0}'.format(Number(videoPort)+2), function(err) {
 	if (err)
 		console.log(err)
 	else
-		console.log('Video (Base64) Sending on {0}'.format(Number(videoPort+2)))
+		console.log('Video (Base64) Sending on {0}'.format(Number(videoPort)+2))
 })
 
 // Command Handling -------------------------------------------------
 commandReceiver.on('message', function(target, data) {
 	try {
 		commandPending++
-		// console.log('Command received ', commandPending, ':', target.toString(), data.toString())
+		console.log('Command received ', commandPending, ':', target.toString(), data.toString())
 
 		// forward (publish) the received video frame to the subscribed clients
 		commandPublisher.send([target, data])
@@ -118,11 +119,11 @@ commandReceiver.bind('tcp://*:{0}'.format(Number(commandPort)), function(err) {
 		console.log('Command Listening on {0}'.format(Number(commandPort)))
 })
 
-commandPublisher.bind('tcp://*:{0}'.format(Number(commandPort+1)), function(err) {
+commandPublisher.bind('tcp://*:{0}'.format(Number(commandPort)+1), function(err) {
 	if (err)
 		console.log(err)
 	else
-		console.log('Command Sending on {0}'.format(Number(commandPort+1)))
+		console.log('Command Sending on {0}'.format(Number(commandPort)+1))
 })
 
 // Event Handling -------------------------------------------------
